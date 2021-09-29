@@ -1,1 +1,0 @@
-# diagonal_machine_test

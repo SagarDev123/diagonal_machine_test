@@ -1,4 +1,4 @@
-package com.android.app.diagonaltest
+package com.android.app.machinetestdiagonal
 
 import org.junit.Test
 

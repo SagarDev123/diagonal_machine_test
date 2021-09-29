@@ -1,4 +1,4 @@
-package com.android.app.diagonaltest
+package com.android.app.machinetestdiagonal
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.android.app.diagonaltest", appContext.packageName)
+        assertEquals("com.android.app.machinetestdiagonal", appContext.packageName)
     }
 }
