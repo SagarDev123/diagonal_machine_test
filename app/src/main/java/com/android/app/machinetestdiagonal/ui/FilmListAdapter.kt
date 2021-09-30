@@ -1,5 +1,6 @@
 package com.android.app.machinetestdiagonal.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,12 +11,19 @@ import com.android.app.machinetestdiagonal.utils.MachineTestApp
 
 class FilmListAdapter(var filmList:List<Content>) : RecyclerView.Adapter<FilmListAdapter.FilmVH>() {
     class FilmVH(val itemFilmContentBinding: ItemFilmContentBinding) :RecyclerView.ViewHolder(itemFilmContentBinding.root){
+
+        private  val TAG = "FilmListAdapter"
+
                  fun bindContent(content: Content) {
                      itemFilmContentBinding.content=content
                      itemFilmContentBinding.ivPoster.setImageDrawable(MachineTestApp.instance?.resources?.getDrawable(getImageDrawable_(content.poster_image)))
                  }
 
         private fun getImageDrawable_(posterImage: String): Int {
+
+            Log.d(TAG, "getImageDrawable_: $posterImage")
+
+
             when(posterImage){
                 "poster1.jpg"->{
                     return R.drawable.poster1
@@ -45,7 +53,7 @@ class FilmListAdapter(var filmList:List<Content>) : RecyclerView.Adapter<FilmLis
                     return R.drawable.poster9
                 }
             }
-            return R.drawable.poster9
+            return R.drawable.placeholder_for_missing_posters
         }
 
 

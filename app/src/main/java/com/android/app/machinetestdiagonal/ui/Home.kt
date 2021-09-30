@@ -4,18 +4,30 @@ import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.View
+import android.widget.EditText
+import android.widget.SearchView
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.app.machinetestdiagonal.R
+
 import com.android.app.machinetestdiagonal.databinding.ActivityMainBinding
 import com.android.app.machinetestdiagonal.model.Content
 
 
+
+
+
+
+
 class Home : AppCompatActivity() {
     private val TAG = "MainActivity"
-    var pageNumber :Int =1
+    var pageNumber: Int = 1
     var _binding: ActivityMainBinding? = null
     var _filmContents: List<Content> = ArrayList()
     var adapter: FilmListAdapter? = null
@@ -55,16 +67,29 @@ class Home : AppCompatActivity() {
             pageNumber = it.toInt()
 
         })
-
+//        setToolbar()
         setUpRecyclerView()
 
-        _binding?.ivBack?.setOnClickListener {
-
-        }
-        _binding?.ivSearch?.setOnClickListener {
-
-        }
     }
+
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        menuInflater.inflate(R.menu.menu_toolbar, menu)
+//        return true
+//    }
+
+//    private fun setToolbar() {
+//        _binding?.toolbar?.title=resources.getString(R.string.text_toolbar_title)
+//        _binding?.toolbar?.inflateMenu(R.menu.menu_toolbar)
+//        _binding?.toolbar?.setOnMenuItemClickListener(object :
+//            Toolbar.OnMenuItemClickListener {
+//            override fun onMenuItemClick(item: MenuItem?): Boolean {
+//
+//                return false
+//            }
+//
+//        })
+//    }
 
     private fun setUpRecyclerView() {
         if (adapter == null) {
@@ -82,14 +107,40 @@ class Home : AppCompatActivity() {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1)) {
                     Log.d(TAG, "onScrollStateChanged: $pageNumber")
-                    if (pageNumber!=3){
+                    if (pageNumber != 3) {
                         pageNumber++
-                        viewModel?.loadMore(pageNumber,this@Home)
+                        viewModel?.loadMore(pageNumber, this@Home)
                     }
 
                 }
             }
         })
+
+        _binding?.ivSearch?.setOnClickListener {
+            _binding?.searchLayout?.visibility = View.VISIBLE
+            _binding?.toolbarLayout?.visibility = View.GONE
+        }
+
+
+        val searchEditText =
+            _binding?.searchEdit?.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+        searchEditText?.setTextColor(resources.getColor(R.color.white))
+        searchEditText?.setHintTextColor(resources.getColor(R.color.white))
+
+
+        _binding?.searchEdit?.setOnCloseListener(object :SearchView.OnCloseListener{
+            override fun onClose(): Boolean {
+                _binding?.searchLayout?.visibility = View.GONE
+                _binding?.toolbarLayout?.visibility = View.VISIBLE
+                return false
+            }
+
+        })
+
+
+
+
+
 
 
     }
