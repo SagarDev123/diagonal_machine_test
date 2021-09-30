@@ -3,6 +3,7 @@
     package="com.android.app.machinetestdiagonal">
 
     <application
+        android:name=".utils.MachineTestApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -10,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MachineTestDiagonal">
         <activity
-            android:name=".Home"
+            android:name=".ui.Home"
+            android:screenOrientation="fullSensor"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

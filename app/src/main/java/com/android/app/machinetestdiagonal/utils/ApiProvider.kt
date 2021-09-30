@@ -6,7 +6,7 @@ import java.io.InputStream
 import java.nio.charset.StandardCharsets
 
 object ApiProvider {
-    fun getJsonFromAssets(context: Context, fileName: String): String? {
+   suspend fun getJsonFromAssets(context: Context, fileName: String): String? {
         val jsonString: String = try {
             val `is`: InputStream = context.assets.open(fileName)
             val size: Int = `is`.available()
