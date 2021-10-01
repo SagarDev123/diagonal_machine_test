@@ -1,4 +1,4 @@
-package com.android.app.machinetestdiagonal.ui
+package com.android.app.machinetestdiagonal.ui.home.adapter
 
 import android.util.Log
 import android.view.LayoutInflater

@@ -1,12 +1,10 @@
-package com.android.app.machinetestdiagonal.ui
+package com.android.app.machinetestdiagonal.ui.home
 
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.view.View
-import android.widget.EditText
 import android.widget.SearchView
 
 import androidx.appcompat.app.AppCompatActivity
@@ -14,15 +12,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.app.machinetestdiagonal.R
+
 
 import com.android.app.machinetestdiagonal.databinding.ActivityMainBinding
 import com.android.app.machinetestdiagonal.model.Content
 
 
-
-
-
+import android.widget.ImageView
+import com.android.app.machinetestdiagonal.R
+import com.android.app.machinetestdiagonal.ui.home.adapter.FilmListAdapter
+import com.android.app.machinetestdiagonal.utils.Utils
 
 
 class Home : AppCompatActivity() {
@@ -67,6 +66,10 @@ class Home : AppCompatActivity() {
             pageNumber = it.toInt()
 
         })
+
+        viewModel?.searchedFilm?.observe(this, Observer {
+            adapter?.updateContent(it)
+        })
 //        setToolbar()
         setUpRecyclerView()
 
@@ -91,6 +94,34 @@ class Home : AppCompatActivity() {
 //        })
 //    }
 
+    override fun onResume() {
+        super.onResume()
+        _binding?.searchEdit?.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (Utils.checkIfQueryIsValid(query)) {
+                    query?.let { viewModel?.filter(it) }
+                }else{
+                    pageNumber=1
+                    viewModel?.loadMore(pageNumber,this@Home)
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (Utils.checkIfQueryIsValid(newText)) {
+                    newText?.let { viewModel?.filter(it) }
+                }else{
+                    pageNumber=1
+                    viewModel?.loadMore(pageNumber,this@Home)
+                }
+               return false
+            }
+
+        })
+    }
+
+
+
     private fun setUpRecyclerView() {
         if (adapter == null) {
             adapter = FilmListAdapter(_filmContents)
@@ -107,11 +138,12 @@ class Home : AppCompatActivity() {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1)) {
                     Log.d(TAG, "onScrollStateChanged: $pageNumber")
-                    if (pageNumber != 3) {
-                        pageNumber++
-                        viewModel?.loadMore(pageNumber, this@Home)
+                    if(getIfSearchIsEnabled()){
+                        if (pageNumber != 3) {
+                            pageNumber++
+                            viewModel?.loadMore(pageNumber, this@Home)
+                        }
                     }
-
                 }
             }
         })
@@ -122,27 +154,41 @@ class Home : AppCompatActivity() {
         }
 
 
-        val searchEditText =
-            _binding?.searchEdit?.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
-        searchEditText?.setTextColor(resources.getColor(R.color.white))
-        searchEditText?.setHintTextColor(resources.getColor(R.color.white))
+        // Does help!
+        _binding?.searchEdit?.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
+            ?.setColorFilter(resources.getColor(R.color.white))
+
 
 
         _binding?.searchEdit?.setOnCloseListener(object :SearchView.OnCloseListener{
             override fun onClose(): Boolean {
                 _binding?.searchLayout?.visibility = View.GONE
                 _binding?.toolbarLayout?.visibility = View.VISIBLE
+                pageNumber =1
+                viewModel?.loadMore(pageNumber,this@Home)
                 return false
             }
 
         })
 
 
+        _binding?.searchCancel?.setOnClickListener {
+            _binding?.searchLayout?.visibility = View.GONE
+            _binding?.toolbarLayout?.visibility = View.VISIBLE
+            pageNumber =1
+            viewModel?.loadMore(pageNumber,this@Home)
+        }
 
 
 
 
 
+
+
+    }
+
+    private fun getIfSearchIsEnabled(): Boolean {
+      return _binding?.searchLayout?.visibility==View.GONE
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

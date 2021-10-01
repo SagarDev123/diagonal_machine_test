@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MachineTestDiagonal">
         <activity
-            android:name=".ui.Home"
+            android:name=".ui.home.Home"
             android:screenOrientation="fullSensor"
             android:exported="true">
             <intent-filter>
